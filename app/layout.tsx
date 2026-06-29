@@ -1,5 +1,16 @@
-import type { PropsWithChildren } from 'react';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import './globals.css';
 
-export function Layout({ children }: PropsWithChildren) {
-  return <>{children}</>;
+export const metadata: Metadata = {
+  title: 'Task Manager',
+  description: 'A tidy command center for deadlines, projects, and drag-and-drop planning.',
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }

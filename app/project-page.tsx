@@ -1,3 +1,5 @@
+'use client';
+
 import { Navigate, useParams } from 'react-router-dom';
 import { TaskBoard } from '../components/TaskBoard';
 import { getProject } from '../src/taskStore';

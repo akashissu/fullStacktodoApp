@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { AppShell } from '../components/AppShell';
-import { HomePage } from '../app/page';
+import HomePage from '../app/page';
 import { ProjectPage } from '../app/project-page';
 
 export default function App() {
