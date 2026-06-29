@@ -1,76 +1,40 @@
-# AKA-70 Implementation Notes
+# Implementation Notes
 
-## Purpose
+## AKA-72 — Build Failed Check Once and Fix It
 
-This document is a deployment and review handoff summary for the Task Manager App delivered under ticket AKA-70.
+This handoff note summarizes the deployment-facing architecture relevant to the build failure report.
 
-## Architecture Summary
+## Summary
 
-The application is a client-side Vite + React 18 SPA using TypeScript and React Router.
+The repository is a hybrid frontend setup that includes:
 
-### Main building blocks
+- a root-level `package.json`
+- a root-level Next.js dependency (`next`)
+- Next.js support files such as `app/layout.tsx` and `next-env.d.ts`
+- a Vite/React client entrypoint at `src/main.tsx`
 
-- `src/main.tsx`
-  - React entry point
-  - wraps the app in `BrowserRouter`
-- `components/Sidebar.tsx`
-  - renders app navigation
-  - shows project-specific navigation links and task counts
-- `components/TaskBoard.tsx`
-  - composes task summary, task list, and add/edit form
-- `components/TaskList.tsx`
-  - owns drag-and-drop ordering behavior
-- `components/TaskCard.tsx`
-  - renders task metadata and item actions
-- `components/AddTaskForm.tsx`
-  - supports both create and edit flows
-- `src/hooks.ts`
-  - exposes task/project state and task operations through `useTaskManager`
-- `src/taskStore.ts`
-  - localStorage-backed persistence and task mutation helpers
+Because framework detection typically starts from the configured project root, the most likely cause of the reported failure is not a missing Next.js dependency in source control, but a deployment configuration pointing at the wrong root directory.
 
-## Routing
+## Verified Build Signals
 
-Implemented routes:
+- `package.json` exists at the repository root
+- `dependencies.next` is present
+- `app/layout.tsx` exists
+- `next-env.d.ts` exists
+- the build script is `next build && tsc -b && vite build`
 
-- `/` — all tasks
-- `/project/:id` — project-scoped task list
+## Deployment Guidance
 
-## Persistence Model
+If a provider reports:
 
-The app uses browser `localStorage` only.
+> No Next.js version detected. Make sure your package.json has "next" in either "dependencies" or "devDependencies". Also check your Root Directory setting matches the directory of your package.json file.
 
-- Storage key: `aka-70-task-manager`
-- First run behavior: writes fallback seeded state if no saved state exists
-- Corrupt or missing localStorage payloads fall back safely to seed data
+then the deployment configuration should be checked for:
 
-## Delivered Functional Areas
+1. **Root Directory** — must be the repository root containing `package.json`
+2. **Install Command** — should run from the repository root, typically `npm install`
+3. **Build Command** — should run `npm run build` from the repository root
 
-- Task create/edit/delete
-- Completion toggle
-- Project assignment
-- Priority assignment
-- Due date assignment
-- Drag-and-drop reorder on all tasks page
-- Drag-and-drop reorder within project views
+## Scope of Scribe Work
 
-## Release Readiness Notes
-
-- No backend, database, or API credentials required
-- No `.env` file required for normal operation
-- Reviewer smoke test path:
-  1. `npm install`
-  2. `npm run dev`
-  3. Open `http://localhost:5173`
-  4. Verify all-task and project routes
-  5. `npm run build`
-
-## Handoff Constraint Log
-
-This Scribe phase intentionally modified markdown/documentation artifacts only:
-
-- `README.md`
-- `CHANGELOG.md`
-- `docs/IMPLEMENTATION_NOTES.md`
-
-No application source files, package manifests, or routing/component code were changed in this phase.
+This phase intentionally avoided application source changes and only prepared documentation/handoff artifacts for automated PR completion.

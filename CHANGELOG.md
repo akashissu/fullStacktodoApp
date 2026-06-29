@@ -2,6 +2,22 @@
 
 All notable changes to this repository are documented here.
 
+## [AKA-72] - 2026-06-29
+
+### Documentation
+
+- Documented the build-failure investigation for the deployment error: "No Next.js version detected"
+- Confirmed the root `package.json` includes `next` in `dependencies`
+- Clarified that deployment/build platforms must use the repository root as the Root Directory so framework detection can find the correct manifest
+- Updated release documentation to explain the mixed Next.js/Vite build pipeline and root-level build prerequisites
+
+### Delivery Notes
+
+- Install with `npm install`
+- Run locally with `npm run dev`
+- Build for production with `npm run build`
+- For hosted builds, ensure the Root Directory points at this repository root
+
 ## [AKA-70] - 2026-06-29
 
 ### Added
